@@ -8,6 +8,7 @@ import dao.BookDAO;
 import dao.BorrowDAO;
 import dao.StudentDAO;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -20,6 +21,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import models.Book;
 import models.Borrow;
 import models.Student;
@@ -97,6 +99,25 @@ public class BorrowController implements Initializable {
         
         List<String> genres = bookDAO.getDistinctGenres();
         genres.stream().forEach(genere->genre.getItems().add(genere));
+        
+        
+        
+        
+        
+        table.getSelectionModel().selectedItemProperty().addListener(
+    (observable, oldValue, newValue) -> {
+        booksCombobox.setValue(newValue.getBookId());
+        studentsCombobox.setValue(newValue.getStudentId());
+        borrowDate.setValue(LocalDate.parse(newValue.getBorrowDate()));
+        String rd = newValue.getReturnDate();
+        if(rd!=null)
+            returnDate.setValue(LocalDate.parse(rd));
+        else
+            returnDate.setValue(null);
+        status.setSelected(newValue.getStatus());    
+    }
+);
+        
     }    
 
     @FXML
@@ -113,6 +134,7 @@ public class BorrowController implements Initializable {
         Borrow borrow = new Borrow(StudentId, bookId, bd);
         borrowDAO.insertOne(borrow);
         viewHandle(event);
+        clear();
     }
 
     @FXML
@@ -138,5 +160,16 @@ public class BorrowController implements Initializable {
     @FXML
     private void searchbyIdHandle(ActionEvent event) {
     }
+    
+    public void clear(){
+        booksCombobox.getItems().clear();
+        studentsCombobox.getItems().clear();
+        borrowDate.setValue(LocalDate.MIN);
+        returnDate.setValue(LocalDate.MIN);
+        genre.getItems().clear();
+        status.setSelected(false);
+    }
+
+   
     
 }
