@@ -40,7 +40,7 @@ public class Student {
         return "Student{" +
                "studentId="       + studentId      +
                ", name='"         + name           + '\'' +
-               '}';
+               "}\n";
     
 }
     

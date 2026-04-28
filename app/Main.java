@@ -4,6 +4,7 @@
  */
 package app;
 
+import dao.BookDAO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,8 +27,8 @@ public class Main extends Application{
     public void start(Stage stage) throws Exception {
         Parent p1 = FXMLLoader.load(getClass().getResource("../views/Borrow.fxml"));
 
-
-
+        System.out.println(BookDAO.findAllBooks());
+        
         Scene s = new Scene(p1);
         stage.setScene(s);
         stage.setTitle("Library Management System");

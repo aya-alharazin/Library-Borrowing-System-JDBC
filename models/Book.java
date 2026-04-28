@@ -60,7 +60,7 @@ public class Book {
                ", genre='"         + genre           + '\'' +
                ", totalCopies="    + totalCopies     +
                ", availableCopies="+ availableCopies +
-               '}';
+               "}\n";
     }
     
 }
