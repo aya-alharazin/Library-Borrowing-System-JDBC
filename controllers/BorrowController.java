@@ -38,7 +38,6 @@ public class BorrowController implements Initializable {
     private DatePicker borrowDate;
     @FXML
     private DatePicker returnDate;
-    private ComboBox<String> genre;
     @FXML
     private CheckBox status;
     @FXML
@@ -79,8 +78,6 @@ public class BorrowController implements Initializable {
         studentIds.stream()
                 .forEach(id->studentsCombobox.getItems().add(id));
         
-        List<String> genres = bookDAO.getDistinctGenres();
-        genres.stream().forEach(genere->genre.getItems().add(genere));
         
         
         
@@ -160,9 +157,8 @@ public class BorrowController implements Initializable {
     public void clear(){
         booksCombobox.getItems().clear();
         studentsCombobox.getItems().clear();
-        borrowDate.setValue(LocalDate.MIN);
-        returnDate.setValue(LocalDate.MIN);
-        genre.getItems().clear();
+        borrowDate.setValue(null);
+        returnDate.setValue(null);
         status.setSelected(false);
     }
 

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import models.Borrow;
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
 
 /**
  *
@@ -119,4 +118,44 @@ public class BorrowDAO {
         return false;
     }
     
+    public List<Borrow> findBorrowedBooks(){
+        List<Borrow> borrows = new ArrayList<>();
+
+        String sql = "SELECT * FROM borrow WHERE status = false";
+        try{
+            Connection conn = DBConnection.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                int borrowId = rs.getInt("borrow_id");
+                int studentId = rs.getInt("student_id");
+                int bookId = rs.getInt("book_id");
+
+                String borrowDate = rs.getString("borrow_date");
+
+                String returnDate = rs.getString("return_date");
+
+                boolean status = rs.getBoolean("status");
+
+                Borrow b = new Borrow(
+                        borrowId,
+                        studentId,
+                        bookId,
+                        borrowDate,
+                        returnDate,
+                        status
+                 );
+
+                borrows.add(b);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return borrows;
+        }
+
 }
