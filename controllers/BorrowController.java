@@ -18,6 +18,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import models.Book;
 import models.Borrow;
 import models.Student;
@@ -79,6 +80,12 @@ public class BorrowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        borrowIdTC.setCellValueFactory(new PropertyValueFactory<>("borrowId"));
+        bookIdTC.setCellValueFactory(new PropertyValueFactory<>("bookId"));
+        studentIdTC.setCellValueFactory(new PropertyValueFactory<>("studentId"));
+        borrowDateTC.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
+        returnDateTC.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
+        statusTC.setCellValueFactory(new PropertyValueFactory<>("status"));
         List<Integer> booksIds  = bookDAO.findAllBooksId();
         List<Integer> studentIds  = studentDAO.findAllStudentsIds();
         booksIds.stream().
