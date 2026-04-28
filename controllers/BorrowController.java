@@ -86,8 +86,8 @@ public class BorrowController implements Initializable {
         studentIds.stream()
                 .forEach(id->studentsCombobox.getItems().add(id));
         
-        
-        
+        List<String> genres = bookDAO.getDistinctGenres();
+        genres.stream().forEach(genere->genre.getItems().add(genere));
     }    
 
     @FXML
