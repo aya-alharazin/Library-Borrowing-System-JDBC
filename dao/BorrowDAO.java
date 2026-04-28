@@ -26,9 +26,12 @@ public class BorrowDAO {
         List<Borrow> borrows = new ArrayList<>();
         String sql = "SELECT * FROM borrow";
 
-        try (Connection conn = DBConnection.getInstance().getConnection();
-             Statement stat = conn.createStatement();
-             ResultSet rs = stat.executeQuery(sql)) {
+        Connection conn = DBConnection.getInstance().getConnection();
+             Statement stat;
+        try {
+            stat = conn.createStatement();
+        
+             ResultSet rs = stat.executeQuery(sql);
 
             while (rs.next()) {
 
@@ -56,10 +59,10 @@ public class BorrowDAO {
 
                 borrows.add(b);
             }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+            } catch (SQLException ex) {
+            System.getLogger(BorrowDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
+
 
         return borrows;
 }
