@@ -18,25 +18,23 @@ import models.Student;
  * @author aya
  */
 public class StudentDAO {
-    public static List<Student> findAllStudents(){
+    public static List<Integer> findAllStudentsIds(){
         Connection conn = DBConnection.getInstance().getConnection();
-        List<Student> students = new ArrayList<>();
+        List<Integer> studentsids = new ArrayList<>();
         try {
             Statement stat = conn.createStatement();
-            String sql = "SELECT * FROM students";
+            String sql = "SELECT student_id FROM students";
             ResultSet rs = stat.executeQuery(sql);
             while(rs.next()){
                 
                 int studentId = rs.getInt(1);
-                String name = rs.getString(2);
-                Student student = new Student(studentId,name);
-                students.add(student);
+                studentsids.add(studentId);
             }
         } catch (SQLException ex) {
             System.getLogger(BookDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         
         
-        return students;
+        return studentsids;
     }
 }

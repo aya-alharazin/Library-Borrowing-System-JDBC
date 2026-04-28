@@ -28,7 +28,6 @@ public class Main extends Application{
     public void start(Stage stage) throws Exception {
         Parent p1 = FXMLLoader.load(getClass().getResource("../views/Borrow.fxml"));
 
-        System.out.println(StudentDAO.findAllStudents());
         
         Scene s = new Scene(p1);
         stage.setScene(s);
