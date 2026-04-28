@@ -4,7 +4,10 @@
  */
 package controllers;
 
+import dao.BookDAO;
+import dao.StudentDAO;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,7 +18,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import models.Book;
 import models.Borrow;
+import models.Student;
 
 /**
  * FXML Controller class
@@ -25,9 +30,9 @@ import models.Borrow;
 public class BorrowController implements Initializable {
 
     @FXML
-    private ComboBox<String> booksCombobox;
+    private ComboBox<Integer> booksCombobox;
     @FXML
-    private ComboBox<String> studentsCombobox;
+    private ComboBox<Integer> studentsCombobox;
     @FXML
     private DatePicker borrowDate;
     @FXML
@@ -66,13 +71,23 @@ public class BorrowController implements Initializable {
     private TableColumn<Borrow, String> returnDateTC;
     @FXML
     private TableColumn<Borrow, Boolean> statusTC;
-
+    List<Book> books=null;
+    List<Student> students=null;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        books = BookDAO.findAllBooks();
+        students=StudentDAO.findAllStudents();
+        books.stream().map(book->book.getBookId())
+                .forEach(id->booksCombobox.getItems().add(id));
+        students.stream().map(student->student.getStudentId())
+                .forEach(id->studentsCombobox.getItems().add(id));
+        
+        
+        
     }    
 
     @FXML
