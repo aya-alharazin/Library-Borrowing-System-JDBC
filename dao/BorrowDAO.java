@@ -9,9 +9,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import models.Borrow;
 
@@ -20,51 +18,28 @@ import models.Borrow;
  * @author aya
  */
 public class BorrowDAO {
-   
-    public List<Borrow> findAll() {
-
-        List<Borrow> borrows = new ArrayList<>();
-        String sql = "SELECT * FROM borrow";
-
+    public List<Borrow> findAll(){
         Connection conn = DBConnection.getInstance().getConnection();
-             Statement stat;
+        List<Borrow> borrows = new ArrayList<>();
         try {
-            stat = conn.createStatement();
-        
-             ResultSet rs = stat.executeQuery(sql);
-
-            while (rs.next()) {
-
-                int borrowId = rs.getInt("borrow_id");
-                int studentId = rs.getInt("student_id");
-                int bookId = rs.getInt("book_id");
-
-                LocalDate borrowDate = rs.getDate("borrow_date").toLocalDate();
-
-                java.sql.Date sqlReturn = rs.getDate("return_date");
-                LocalDate returnDate = (sqlReturn != null)
-                        ? sqlReturn.toLocalDate()
-                        : null;
-
-                boolean status = rs.getBoolean("status");
-
-                Borrow b = new Borrow(
-                        borrowId,
-                        studentId,
-                        bookId,
-                        borrowDate,
-                        returnDate,
-                        status
-                );
-
+            Statement stat = conn.createStatement();
+            String sql = "SELECT * FROM borrow";
+            ResultSet rs = stat.executeQuery(sql);
+            while(rs.next()){
+                
+                int borrowId = rs.getInt(1);
+                int studentId = rs.getInt(2);
+                int bookId = rs.getInt(3);
+                String borrowDate = rs.getString(4);
+                String returnDate = rs.getString(5);
+                boolean status = rs.getBoolean(6);
+                
+                Borrow b =new Borrow(borrowId, studentId, bookId, borrowDate, returnDate, status);
                 borrows.add(b);
             }
-            } catch (SQLException ex) {
-            System.getLogger(BorrowDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } catch (SQLException ex) {
+            System.getLogger(BookDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-
-
         return borrows;
-}
-    
+    }
 }

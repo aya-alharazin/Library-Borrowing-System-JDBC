@@ -4,8 +4,6 @@
  */
 package models;
 
-import java.time.LocalDate;
-
 
 /**
  *
@@ -16,18 +14,24 @@ public class Borrow {
     private int     borrowId;
     private int     studentId;
     private int     bookId;
-    private LocalDate  borrowDate;    // or LocalDate
-    private LocalDate  returnDate;    // null until returned
+    private String  borrowDate;    // or LocalDate
+    private String  returnDate;    // null until returned
     private boolean  status;
 
     // ─── Constructors ───────────────────────────────────────────
 
     public Borrow() {}
 
-    
+    public Borrow(int studentId, int bookId, 
+                  String borrowDate, boolean status) {
+        this.studentId  = studentId;
+        this.bookId     = bookId;
+        this.borrowDate = borrowDate;
+        this.status     = status;
+    }
 
     public Borrow(int borrowId, int studentId, int bookId,
-                  LocalDate borrowDate, LocalDate returnDate, boolean status) {
+                  String borrowDate, String returnDate, boolean status) {
         this.borrowId   = borrowId;
         this.studentId  = studentId;
         this.bookId     = bookId;
@@ -47,11 +51,11 @@ public class Borrow {
     public int getBookId()                        { return bookId; }
     public void setBookId(int bookId)             { this.bookId = bookId; }
 
-    public LocalDate getBorrowDate()                 { return borrowDate; }
-    public void setBorrowDate(LocalDate borrowDate)  { this.borrowDate = borrowDate; }
+    public String getBorrowDate()                 { return borrowDate; }
+    public void setBorrowDate(String borrowDate)  { this.borrowDate = borrowDate; }
 
-    public LocalDate getReturnDate()                 { return returnDate; }
-    public void setReturnDate(LocalDate returnDate)  { this.returnDate = returnDate; }
+    public String getReturnDate()                 { return returnDate; }
+    public void setReturnDate(String returnDate)  { this.returnDate = returnDate; }
 
     public boolean getStatus()                     { return status; }
     public void setStatus(boolean status)          { this.status = status; }

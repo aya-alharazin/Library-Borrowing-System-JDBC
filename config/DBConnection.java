@@ -8,11 +8,12 @@ public class DBConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/library-system";
     private static final String USER = "root";
     private static final String PASSWORD = "";
+    private Connection conn;
 
     private DBConnection(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (ClassNotFoundException ex) {
             System.getLogger(DBConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
 
@@ -24,12 +25,15 @@ public class DBConnection {
         return instance;
     }
     
-    public Connection getConnection() {
+    public synchronized Connection getConnection() {
         try {
-            return DriverManager.getConnection(URL, USER, PASSWORD);
+            if (conn == null || conn.isClosed()) {
+                conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            }
+            return conn;
         } catch (SQLException ex) {
             System.getLogger(DBConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            return null;
+            throw new IllegalStateException("Unable to connect to database", ex);
         }
     }
     

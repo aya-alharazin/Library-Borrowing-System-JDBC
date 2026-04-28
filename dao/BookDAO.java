@@ -41,9 +41,10 @@ public class BookDAO {
 
         String sql = "SELECT DISTINCT genre FROM books";
 
-        try (Connection conn = DBConnection.getInstance().getConnection();
+        Connection conn = DBConnection.getInstance().getConnection();
+        try{
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             ResultSet rs = stmt.executeQuery(sql) ;
 
             while (rs.next()) {
                 genres.add(rs.getString("genre"));
