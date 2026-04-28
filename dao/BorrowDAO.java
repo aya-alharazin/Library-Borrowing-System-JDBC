@@ -6,6 +6,7 @@ package dao;
 
 import config.DBConnection;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import models.Borrow;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 
 /**
  *
@@ -66,6 +68,32 @@ public class BorrowDAO {
     }
     
     
+    public boolean updateOne(Borrow borrow){
+        String sql = "UPDATE borrow SET return_date = ?, status = ? WHERE borrow_id = ?";
+        try{
+        Connection conn = DBConnection.getInstance().getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
+
+        ps.setDate(1, Date.valueOf(borrow.getReturnDate()));
+        
+        ps.setBoolean(2, borrow.getStatus());
+
+        ps.setInt(3, borrow.getBorrowId());
+
+        // execute
+        int rows = ps.executeUpdate();
+
+        return rows > 0;
+
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+
+    return false;
+        
+        
+        
+    }
     
     
     

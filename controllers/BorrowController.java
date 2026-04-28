@@ -114,7 +114,8 @@ public class BorrowController implements Initializable {
             returnDate.setValue(LocalDate.parse(rd));
         else
             returnDate.setValue(null);
-        status.setSelected(newValue.getStatus());    
+        status.setSelected(newValue.getStatus()); 
+        
     }
 );
         
@@ -139,6 +140,20 @@ public class BorrowController implements Initializable {
 
     @FXML
     private void returnHandle(ActionEvent event) {
+        
+        Borrow b = table.getSelectionModel().getSelectedItem();
+        if(b != null){
+            b.setReturnDate(returnDate.getValue().toString());
+            b.setStatus(status.isSelected());
+            borrowDAO.updateOne(b);
+            table.getSelectionModel().clearSelection();
+            viewHandle(event);
+            
+        }
+        
+        
+        
+        
     }
 
     @FXML
