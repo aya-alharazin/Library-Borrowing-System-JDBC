@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import models.Borrow;
+import java.sql.PreparedStatement;
 
 /**
  *
@@ -42,4 +43,30 @@ public class BorrowDAO {
         }
         return borrows;
     }
+    
+    
+    public boolean insertOne(Borrow borrow){
+        Connection conn = DBConnection.getInstance().getConnection();
+        try {
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO borrow(student_id,book_id,borrow_date,return_date,status)"
+                    + " VALUES(?,?,?,?,?)");
+            ps.setInt(1, borrow.getStudentId());
+            ps.setInt(2, borrow.getBookId());
+            ps.setString(3, borrow.getBorrowDate());
+            ps.setString(4, borrow.getReturnDate());
+            ps.setBoolean(5, borrow.getStatus());
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            System.getLogger(BorrowDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            
+        }
+        
+        return false;
+    }
+    
+    
+    
+    
+    
 }

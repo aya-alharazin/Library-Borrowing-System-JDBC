@@ -107,6 +107,12 @@ public class BorrowController implements Initializable {
 
     @FXML
     private void borrowHandle(ActionEvent event) {
+        Integer bookId = booksCombobox.getSelectionModel().getSelectedItem();
+        Integer StudentId = studentsCombobox.getSelectionModel().getSelectedItem();
+        String bd = borrowDate.getValue().toString();
+        Borrow borrow = new Borrow(StudentId, bookId, bd);
+        borrowDAO.insertOne(borrow);
+        viewHandle(event);
     }
 
     @FXML

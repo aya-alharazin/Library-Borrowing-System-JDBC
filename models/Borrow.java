@@ -23,11 +23,10 @@ public class Borrow {
     public Borrow() {}
 
     public Borrow(int studentId, int bookId, 
-                  String borrowDate, boolean status) {
+                  String borrowDate) {
         this.studentId  = studentId;
         this.bookId     = bookId;
         this.borrowDate = borrowDate;
-        this.status     = status;
     }
 
     public Borrow(int borrowId, int studentId, int bookId,

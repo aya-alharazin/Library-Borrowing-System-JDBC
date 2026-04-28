@@ -18,19 +18,19 @@
 }
 
 .subtitle {
-    -fx-text-fill: #94a3b8;
+    -fx-text-fill: white;
     -fx-font-size: 12px;
 }
 
 .section-label {
-    -fx-text-fill: #94a3b8;
+    -fx-text-fill: white;
     -fx-font-size: 11px;
 }
 
 /* INPUTS */
 .input {
     -fx-background-color: #0f172a;
-    -fx-text-fill: white;
+    -fx-text-fill: white ;
     -fx-background-radius: 8;
     -fx-border-radius: 8;
 }
