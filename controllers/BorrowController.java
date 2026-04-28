@@ -45,18 +45,6 @@ public class BorrowController implements Initializable {
     @FXML
     private CheckBox status;
     @FXML
-    private Button viewbtn;
-    @FXML
-    private Button borrowbtn;
-    @FXML
-    private Button returnbtn;
-    @FXML
-    private Button deletebtn;
-    @FXML
-    private Button borrowedBooks;
-    @FXML
-    private Button borrowingStudentsbtn;
-    @FXML
     private TableView<Borrow> table;
     @FXML
     private TableColumn<Borrow, Integer> borrowIdTC;

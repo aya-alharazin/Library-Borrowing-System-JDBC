@@ -58,17 +58,17 @@
 
             <!-- ACTION BUTTONS -->
             <HBox spacing="8">
-                <Button fx:id="viewbtn" onAction="#viewHandle" styleClass="btn-secondary" text="View" />
-                <Button fx:id="borrowbtn" onAction="#borrowHandle" styleClass="btn-primary" text="Borrow" />
-                <Button fx:id="returnbtn" onAction="#returnHandle" styleClass="btn-success" text="Return" />
-                <Button fx:id="deletebtn" onAction="#deleteHandle" styleClass="btn-danger" text="Delete" />
+                <Button onAction="#viewHandle" styleClass="btn-secondary" text="View" />
+                <Button onAction="#borrowHandle" styleClass="btn-primary" text="Borrow" />
+                <Button onAction="#returnHandle" styleClass="btn-success" text="Return" />
+                <Button onAction="#deleteHandle" styleClass="btn-danger" text="Delete" />
             </HBox>
          <Label styleClass="section-label" text="QUICK SEARCH" />
 
             <!-- FILTER BUTTONS -->
             <HBox spacing="8">
-                <Button fx:id="borrowedBooks" onAction="#borrowedBooksHandle" prefHeight="25.0" prefWidth="146.0" styleClass="btn-outline" text="📖 borrowedBooks" />
-                <Button fx:id="borrowingStudentsbtn" onAction="#borrowingStudentsHandle" prefHeight="26.0" prefWidth="145.0" styleClass="btn-outline" text="🎓 borrowingStudents" />
+                <Button onAction="#borrowedBooksHandle" prefHeight="25.0" prefWidth="146.0" styleClass="btn-outline" text="📖 borrowedBooks" />
+                <Button onAction="#borrowingStudentsHandle" prefHeight="26.0" prefWidth="145.0" styleClass="btn-outline" text="🎓 borrowingStudents" />
             </HBox>
 
             <HBox spacing="8" />
