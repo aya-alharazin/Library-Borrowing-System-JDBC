@@ -101,7 +101,8 @@ public class BorrowController implements Initializable {
 
     @FXML
     private void viewHandle(ActionEvent event) {
-        table.getItems().addAll(borrowDAO.findAll());
+        // Replace current rows with fresh DB results on each click.
+        table.getItems().setAll(borrowDAO.findAll());
     }
 
     @FXML

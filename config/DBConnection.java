@@ -5,12 +5,13 @@ import java.sql.SQLException;
 
 public class DBConnection {
     private static DBConnection instance;
-    private static Connection conn ;
+    private static final String URL = "jdbc:mysql://localhost:3306/library-system";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
+
     private DBConnection(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localHost:3306/library-system";
-            conn = DriverManager.getConnection(url, "root", "");
         } catch (ClassNotFoundException | SQLException ex) {
             System.getLogger(DBConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
@@ -23,8 +24,13 @@ public class DBConnection {
         return instance;
     }
     
-    public Connection getConnection(){
-        return conn;
+    public Connection getConnection() {
+        try {
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException ex) {
+            System.getLogger(DBConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            return null;
+        }
     }
     
 }
