@@ -5,6 +5,7 @@
 package controllers;
 
 import dao.BookDAO;
+import dao.BorrowDAO;
 import dao.StudentDAO;
 import java.net.URL;
 import java.util.List;
@@ -74,6 +75,7 @@ public class BorrowController implements Initializable {
     private TableColumn<Borrow, Boolean> statusTC;
     BookDAO bookDAO =new BookDAO();
     StudentDAO studentDAO = new StudentDAO();
+    BorrowDAO borrowDAO = new BorrowDAO();
     /**
      * Initializes the controller class.
      */
@@ -99,6 +101,7 @@ public class BorrowController implements Initializable {
 
     @FXML
     private void viewHandle(ActionEvent event) {
+        table.getItems().addAll(borrowDAO.findAll());
     }
 
     @FXML
