@@ -36,25 +36,6 @@ public class BookDAO {
     }
     
     
-    public List<String> getDistinctGenres() {
-        List<String> genres = new ArrayList<>();
-
-        String sql = "SELECT DISTINCT genre FROM books";
-
-        Connection conn = DBConnection.getInstance().getConnection();
-        try{
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql) ;
-
-            while (rs.next()) {
-                genres.add(rs.getString("genre"));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return genres;
-}
+   
     
 }
