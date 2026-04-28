@@ -16,14 +16,14 @@ public class Borrow {
     private int     bookId;
     private String  borrowDate;    // or LocalDate
     private String  returnDate;    // null until returned
-    private String  status;
+    private boolean  status;
 
     // ─── Constructors ───────────────────────────────────────────
 
     public Borrow() {}
 
     public Borrow(int studentId, int bookId, 
-                  String borrowDate, String status) {
+                  String borrowDate, boolean status) {
         this.studentId  = studentId;
         this.bookId     = bookId;
         this.borrowDate = borrowDate;
@@ -31,7 +31,7 @@ public class Borrow {
     }
 
     public Borrow(int borrowId, int studentId, int bookId,
-                  String borrowDate, String returnDate, String status) {
+                  String borrowDate, String returnDate, boolean status) {
         this.borrowId   = borrowId;
         this.studentId  = studentId;
         this.bookId     = bookId;
@@ -57,8 +57,8 @@ public class Borrow {
     public String getReturnDate()                 { return returnDate; }
     public void setReturnDate(String returnDate)  { this.returnDate = returnDate; }
 
-    public String getStatus()                     { return status; }
-    public void setStatus(String status)          { this.status = status; }
+    public boolean getStatus()                     { return status; }
+    public void setStatus(boolean status)          { this.status = status; }
 
     // ─── toString ───────────────────────────────────────────────
 

@@ -15,6 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import models.Borrow;
 
 /**
  * FXML Controller class
@@ -24,15 +25,15 @@ import javafx.scene.control.TableView;
 public class BorrowController implements Initializable {
 
     @FXML
-    private ComboBox<?> booksCombobox;
+    private ComboBox<String> booksCombobox;
     @FXML
-    private ComboBox<?> studentsCombobox;
+    private ComboBox<String> studentsCombobox;
     @FXML
     private DatePicker borrowDate;
     @FXML
     private DatePicker returnDate;
     @FXML
-    private ComboBox<?> genre;
+    private ComboBox<String> genre;
     @FXML
     private CheckBox status;
     @FXML
@@ -52,19 +53,19 @@ public class BorrowController implements Initializable {
     @FXML
     private Button searchbyIdbtn;
     @FXML
-    private TableView<?> table;
+    private TableView<Borrow> table;
     @FXML
-    private TableColumn<?, ?> borrowIdTC;
+    private TableColumn<Borrow, Integer> borrowIdTC;
     @FXML
-    private TableColumn<?, ?> bookIdTC;
+    private TableColumn<Borrow, Integer> bookIdTC;
     @FXML
-    private TableColumn<?, ?> studentIdTC;
+    private TableColumn<Borrow, Integer> studentIdTC;
     @FXML
-    private TableColumn<?, ?> borrowDateTC;
+    private TableColumn<Borrow, String> borrowDateTC;
     @FXML
-    private TableColumn<?, ?> returnDateTC;
+    private TableColumn<Borrow, String> returnDateTC;
     @FXML
-    private TableColumn<?, ?> statusTC;
+    private TableColumn<Borrow, Boolean> statusTC;
 
     /**
      * Initializes the controller class.
