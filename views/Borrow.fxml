@@ -45,10 +45,7 @@
 
             <!-- GENRE + STATUS -->
             <HBox spacing="10">
-                <VBox>
-                    <Label styleClass="section-label" text="GENRE" />
-                    <ComboBox fx:id="genre" promptText="All genres" styleClass="input" />
-                </VBox>
+                <VBox />
 
                 <VBox>
                     <Label styleClass="section-label" text="STATUS" />
@@ -74,10 +71,7 @@
                 <Button fx:id="borrowingStudentsbtn" onAction="#borrowingStudentsHandle" prefHeight="26.0" prefWidth="145.0" styleClass="btn-outline" text="🎓 borrowingStudents" />
             </HBox>
 
-            <HBox spacing="8">
-                <Button fx:id="searchbyGenrebtn" onAction="#searchbyGenreHandle" prefHeight="26.0" prefWidth="134.0" styleClass="btn-outline" text="🔍 By Genre" />
-                <Button fx:id="searchbyIdbtn" onAction="#searchbyIdHandle" prefHeight="26.0" prefWidth="134.0" styleClass="btn-outline" text="🔍 By IDs" />
-            </HBox>
+            <HBox spacing="8" />
 
         </VBox>
     </left>

@@ -97,4 +97,26 @@ public class BorrowDAO {
     
     
     
+    public boolean deleteOne(Borrow borrow) {
+
+            String sql = "DELETE FROM borrow WHERE borrow_id = ?";
+            try{
+            Connection conn = DBConnection.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql); 
+
+            // set parameter
+            ps.setInt(1, borrow.getBorrowId());
+
+            // execute
+            int rows = ps.executeUpdate();
+
+            return rows > 0;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+    
 }

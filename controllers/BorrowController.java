@@ -41,7 +41,6 @@ public class BorrowController implements Initializable {
     private DatePicker borrowDate;
     @FXML
     private DatePicker returnDate;
-    @FXML
     private ComboBox<String> genre;
     @FXML
     private CheckBox status;
@@ -57,10 +56,6 @@ public class BorrowController implements Initializable {
     private Button borrowedBooks;
     @FXML
     private Button borrowingStudentsbtn;
-    @FXML
-    private Button searchbyGenrebtn;
-    @FXML
-    private Button searchbyIdbtn;
     @FXML
     private TableView<Borrow> table;
     @FXML
@@ -162,7 +157,8 @@ public class BorrowController implements Initializable {
     private void deleteHandle(ActionEvent event) {
         Borrow b = table.getSelectionModel().getSelectedItem();
         if(b != null){
-            bookDAO.deleteOne(b);
+            borrowDAO.deleteOne(b);
+            viewHandle(event);
         }
     }
 
@@ -174,13 +170,6 @@ public class BorrowController implements Initializable {
     private void borrowingStudentsHandle(ActionEvent event) {
     }
 
-    @FXML
-    private void searchbyGenreHandle(ActionEvent event) {
-    }
-
-    @FXML
-    private void searchbyIdHandle(ActionEvent event) {
-    }
     
     public void clear(){
         booksCombobox.getItems().clear();
