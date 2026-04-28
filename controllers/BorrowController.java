@@ -71,14 +71,16 @@ public class BorrowController implements Initializable {
     private TableColumn<Borrow, String> returnDateTC;
     @FXML
     private TableColumn<Borrow, Boolean> statusTC;
+    BookDAO bookDAO =new BookDAO();
+    StudentDAO studentDAO = new StudentDAO();
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        List<Integer> booksIds  = BookDAO.findAllBooksId();
-        List<Integer> studentIds  = BookDAO.findAllBooksId();
+        List<Integer> booksIds  = bookDAO.findAllBooksId();
+        List<Integer> studentIds  = studentDAO.findAllStudentsIds();
         booksIds.stream().
                 forEach(id->booksCombobox.getItems().add(id));
         studentIds.stream()

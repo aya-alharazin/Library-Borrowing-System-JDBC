@@ -6,7 +6,6 @@ package dao;
 
 import config.DBConnection;
 import java.util.List;
-import models.Book;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
  * @author aya
  */
 public class BookDAO {
-    public static List<Integer> findAllBooksId(){
+    public List<Integer> findAllBooksId(){
         Connection conn = DBConnection.getInstance().getConnection();
         List<Integer> booksIds = new ArrayList<>();
         try {
@@ -37,6 +36,24 @@ public class BookDAO {
     }
     
     
-    
+    public List<String> getDistinctGenres() {
+        List<String> genres = new ArrayList<>();
+
+        String sql = "SELECT DISTINCT genre FROM books";
+
+        try (Connection conn = DBConnection.getInstance().getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                genres.add(rs.getString("genre"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return genres;
+}
     
 }

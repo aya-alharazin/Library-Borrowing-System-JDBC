@@ -18,7 +18,7 @@ import models.Student;
  * @author aya
  */
 public class StudentDAO {
-    public static List<Integer> findAllStudentsIds(){
+    public List<Integer> findAllStudentsIds(){
         Connection conn = DBConnection.getInstance().getConnection();
         List<Integer> studentsids = new ArrayList<>();
         try {
