@@ -27,7 +27,8 @@ public class BookDAO {
                 Book book = new Book();
                 int bookId = rs.getInt(1);
                 String title = rs.getString(2);
-                
+                String genre =rs.getString(3);
+                Integer totalCopies=rs.getInt(4);
                 
                 
                 
