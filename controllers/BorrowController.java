@@ -61,6 +61,8 @@ public class BorrowController implements Initializable {
     BookDAO bookDAO =new BookDAO();
     StudentDAO studentDAO = new StudentDAO();
     BorrowDAO borrowDAO = new BorrowDAO();
+    @FXML
+    private Button searchbyIds;
     /**
      * Initializes the controller class.
      */
@@ -154,9 +156,6 @@ public class BorrowController implements Initializable {
     private void borrowedBooksHandle(ActionEvent event) {
     }
 
-    @FXML
-    private void borrowingStudentsHandle(ActionEvent event) {
-    }
 
     
     public void clear(){
