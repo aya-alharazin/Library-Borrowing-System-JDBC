@@ -10,11 +10,13 @@ import dao.StudentDAO;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -109,6 +111,7 @@ public class BorrowController implements Initializable {
 
     @FXML
     private void borrowHandle(ActionEvent event) {
+        if(isValidate()){
         Integer bookId = booksCombobox.getSelectionModel().getSelectedItem();
         Integer StudentId = studentsCombobox.getSelectionModel().getSelectedItem();
         String bd = borrowDate.getValue().toString();
@@ -116,6 +119,20 @@ public class BorrowController implements Initializable {
         borrowDAO.insertOne(borrow);
         viewHandle(event);
         clear();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Book borrowed successfully!");
+
+        alert.showAndWait();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Invalid Input");
+            alert.setHeaderText("Missing Data");
+            alert.setContentText("Please select both student and book!");
+
+            alert.showAndWait();
+        }
     }
 
     @FXML
@@ -139,8 +156,20 @@ public class BorrowController implements Initializable {
     private void deleteHandle(ActionEvent event) {
         Borrow b = table.getSelectionModel().getSelectedItem();
         if(b != null){
-            borrowDAO.deleteOne(b);
-            viewHandle(event);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure?");
+            alert.setContentText("Do you want to delete this borrow record?");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                borrowDAO.deleteOne(b);
+                viewHandle(event);
+            } else {
+                // user cancelled
+                System.out.println("Delete cancelled");
+            }
+            
         }
     }
 
@@ -166,6 +195,10 @@ public class BorrowController implements Initializable {
         Integer bookId = booksCombobox.getValue();
         List<Borrow> borrows = borrowDAO.searchByIds(stdId,bookId);
         table.getItems().setAll(borrows);
+    }
+    
+    public boolean isValidate(){
+        return true;
     }
 
    
