@@ -106,6 +106,9 @@ public class BorrowController implements Initializable {
         
         table.getSelectionModel().selectedItemProperty().addListener(
     (observable, oldValue, newValue) -> {
+         if (newValue == null) {
+            return;
+        }
         booksCombobox.setValue(newValue.getBookId());
         studentsCombobox.setValue(newValue.getStudentId());
         borrowDate.setValue(LocalDate.parse(newValue.getBorrowDate()));
@@ -157,6 +160,10 @@ public class BorrowController implements Initializable {
 
     @FXML
     private void deleteHandle(ActionEvent event) {
+        Borrow b = table.getSelectionModel().getSelectedItem();
+        if(b != null){
+            bookDAO.deleteOne(b);
+        }
     }
 
     @FXML
