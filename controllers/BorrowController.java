@@ -146,7 +146,6 @@ public class BorrowController implements Initializable {
             b.setReturnDate(returnDate.getValue().toString());
             b.setStatus(status.isSelected());
             borrowDAO.updateOne(b);
-            table.getSelectionModel().clearSelection();
             viewHandle(event);
             
         }
