@@ -16,13 +16,9 @@ public class Student {
 
     public Student() {}
 
-    public Student(String name, String email, 
-                   String phone, String enrollmentDate) {
-        this.name           = name;
-    }
+    
 
-    public Student(int studentId, String name, String email,
-                   String phone, String enrollmentDate) {
+    public Student(int studentId, String name) {
         this.studentId      = studentId;
         this.name           = name;
     }
