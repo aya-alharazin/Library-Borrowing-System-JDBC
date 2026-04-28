@@ -21,10 +21,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import models.Book;
 import models.Borrow;
-import models.Student;
 
 /**
  * FXML Controller class
@@ -154,6 +151,8 @@ public class BorrowController implements Initializable {
 
     @FXML
     private void borrowedBooksHandle(ActionEvent event) {
+        List<Borrow> borrows = borrowDAO.findBorrowedBooks();
+        table.getItems().setAll(borrows);
     }
 
 
