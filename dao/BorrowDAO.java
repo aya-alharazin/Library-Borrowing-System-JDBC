@@ -157,5 +157,50 @@ public class BorrowDAO {
 
         return borrows;
         }
+    
+    
+    public List<Borrow> searchByIds(int studentId, int bookId) {
+
+    List<Borrow> borrows = new ArrayList<>();
+
+    String sql = "SELECT * FROM borrow WHERE book_id = ? AND student_id = ?";
+    try{
+    Connection conn = DBConnection.getInstance().getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql);
+
+        // set parameters
+        ps.setInt(1, bookId);
+        ps.setInt(2, studentId);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+
+            int borrowId = rs.getInt("borrow_id");
+
+            String borrowDate = rs.getString("borrow_date");
+
+            String returnDate = rs.getString("return_date");
+
+            boolean status = rs.getBoolean("status");
+
+            Borrow b = new Borrow(
+                    borrowId,
+                    studentId,
+                    bookId,
+                    borrowDate,
+                    returnDate,
+                    status
+            );
+
+            borrows.add(b);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return borrows;
+}
 
 }

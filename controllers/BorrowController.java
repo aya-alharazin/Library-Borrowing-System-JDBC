@@ -57,8 +57,6 @@ public class BorrowController implements Initializable {
     BookDAO bookDAO =new BookDAO();
     StudentDAO studentDAO = new StudentDAO();
     BorrowDAO borrowDAO = new BorrowDAO();
-    @FXML
-    private Button searchbyIds;
     /**
      * Initializes the controller class.
      */
@@ -160,6 +158,14 @@ public class BorrowController implements Initializable {
         borrowDate.setValue(null);
         returnDate.setValue(null);
         status.setSelected(false);
+    }
+
+    @FXML
+    private void searchbyIds(ActionEvent event) {
+        Integer stdId = studentsCombobox.getValue();
+        Integer bookId = booksCombobox.getValue();
+        List<Borrow> borrows = borrowDAO.searchByIds(stdId,bookId);
+        table.getItems().setAll(borrows);
     }
 
    

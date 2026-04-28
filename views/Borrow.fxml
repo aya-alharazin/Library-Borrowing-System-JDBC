@@ -73,7 +73,7 @@
             <HBox spacing="8" />
          <HBox prefHeight="47.0" prefWidth="278.0" spacing="8">
             <children>
-               <Button fx:id="searchbyIds" onAction="#borrowedBooksHandle" prefHeight="26.0" prefWidth="286.0" styleClass="btn-outline" text="search by ids" />
+               <Button onAction="#searchbyIds" prefHeight="26.0" prefWidth="286.0" styleClass="btn-outline" text="search by ids" />
             </children>
          </HBox>
 
