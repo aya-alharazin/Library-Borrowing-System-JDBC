@@ -159,10 +159,19 @@ public class BorrowController implements Initializable {
         
         Borrow b = table.getSelectionModel().getSelectedItem();
         if(b != null){
+            if(returnDate.getValue() == null || !status.isSelected()){
+               showWarningAlert(
+                    "Invalid Input",
+                    "Missing Data",
+                    "Please select both return date and status!"
+            );
+               return;
+            }
             b.setReturnDate(returnDate.getValue().toString());
             b.setStatus(status.isSelected());
             borrowDAO.updateOne(b);
             viewHandle(event);
+            
         }else{
             showWarningAlert(
                     "No Selection",
