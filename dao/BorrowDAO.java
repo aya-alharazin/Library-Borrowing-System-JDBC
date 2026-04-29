@@ -6,201 +6,98 @@ package dao;
 
 import config.DBConnection;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import models.Borrow;
 import java.sql.PreparedStatement;
-
 /**
  *
  * @author aya
  */
 public class BorrowDAO {
+
     public List<Borrow> findAll(){
-        List<Borrow> borrows = new ArrayList<>();
-        try {
-        Connection conn = DBConnection.getInstance().getConnection();
-            Statement stat = conn.createStatement();
-            String sql = "SELECT * FROM borrow";
-            ResultSet rs = stat.executeQuery(sql);
-            while(rs.next()){
-                
-                int borrowId = rs.getInt(1);
-                int studentId = rs.getInt(2);
-                int bookId = rs.getInt(3);
-                String borrowDate = rs.getString(4);
-                String returnDate = rs.getString(5);
-                boolean status = rs.getBoolean(6);
-                
-                Borrow b =new Borrow(borrowId, studentId, bookId, borrowDate, returnDate, status);
-                borrows.add(b);
-            }
-        } catch (SQLException ex) {
-            System.getLogger(BookDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-        return borrows;
-    }
-    
-    
-    public boolean insertOne(Borrow borrow){
+        List<Borrow> list = new ArrayList<>();
         try {
             Connection conn = DBConnection.getInstance().getConnection();
+            String sql = "SELECT * FROM borrow";
+            Statement stat = conn.createStatement();
+            ResultSet rs = stat.executeQuery(sql);
+            while(rs.next()){
+                Integer borrow_id =rs.getInt("borrow_id");
+                Integer student_id = rs.getInt("student_id");
+                Integer book_id = rs.getInt("book_id");
+                String borrow_date = rs.getString("borrow_date");
+                String return_date = rs.getString("return_date");
+                Boolean status = rs.getBoolean("status");
+                Borrow b = new Borrow(borrow_id, student_id,book_id,
+                        borrow_date, return_date, status);
+                list.add(b);
+                
+            }
+        } catch (SQLException ex) {
+            System.getLogger(BorrowDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
         
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO borrow(student_id,book_id,borrow_date,return_date,status)"
-                    + " VALUES(?,?,?,?,?)");
-            ps.setInt(1, borrow.getStudentId());
-            ps.setInt(2, borrow.getBookId());
-            ps.setString(3, borrow.getBorrowDate());
-            ps.setString(4, borrow.getReturnDate());
-            ps.setBoolean(5, borrow.getStatus());
+        return list;
+    }
+    
+    public boolean insertOne(Borrow b){
+        try {
+            Connection conn = DBConnection.getInstance().getConnection();
+            PreparedStatement ps =conn.prepareStatement("INSERT INTO borrow"
+                    + "(student_id,book_id,borrow_date,return_date,status) VALUES(?,?,?,?,?)");
+            ps.setInt(1, b.getStudentId());
+            ps.setInt(2, b.getBookId());
+            ps.setString(3, b.getBorrowDate());
+            ps.setString(4, b.getReturnDate());
+            ps.setBoolean(5, b.getStatus());
             ps.executeUpdate();
             return true;
         } catch (SQLException ex) {
             System.getLogger(BorrowDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            
         }
-        
-        return false;
-    }
-    
-    
-    public boolean updateOne(Borrow borrow){
-        String sql = "UPDATE borrow SET return_date = ?, status = ? WHERE borrow_id = ?";
-        try{
-        Connection conn = DBConnection.getInstance().getConnection();
-        PreparedStatement ps = conn.prepareStatement(sql);
-
-        ps.setString(1, borrow.getReturnDate());
-        
-        ps.setBoolean(2, borrow.getStatus());
-
-        ps.setInt(3, borrow.getBorrowId());
-
-        // execute
-        int rows = ps.executeUpdate();
-
-        return rows > 0;
-
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-    }
-
     return false;
         
-        
+    }
+    
+    
+    public boolean updateOne(Borrow b){
+        String sql = "UPDATE borrow SET return_date=? , status=? WHERE borrow_id =?";
+        Connection conn;
+        try {
+            conn = DBConnection.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, b.getReturnDate());
+            ps.setBoolean(2, b.getStatus());
+            ps.setInt(3, b.getBorrowId());
+            int noOfRows = ps.executeUpdate();
+            return noOfRows>0;
+        } catch (SQLException ex) {
+            System.getLogger(BorrowDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+       
+        return false;
         
     }
     
     
-    
-    public boolean deleteOne(Borrow borrow) {
-
-            String sql = "DELETE FROM borrow WHERE borrow_id = ?";
-            try{
-            Connection conn = DBConnection.getInstance().getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql); 
-
-            // set parameter
-            ps.setInt(1, borrow.getBorrowId());
-
-            // execute
-            int rows = ps.executeUpdate();
-
-            return rows > 0;
-
+    public boolean deleteOne(Borrow b){
+        String sql = "DELETE FROM borrow WHERE borrow_id=?";
+        Connection conn;
+        try {
+            conn = DBConnection.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, b.getBorrowId());
+            int noOfRows = ps.executeUpdate();
+            return noOfRows > 0;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            System.getLogger(BorrowDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-
         return false;
     }
     
-    public List<Borrow> findBorrowedBooks(){
-        List<Borrow> borrows = new ArrayList<>();
-
-        String sql = "SELECT * FROM borrow WHERE status = false";
-        try{
-            Connection conn = DBConnection.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-
-                int borrowId = rs.getInt("borrow_id");
-                int studentId = rs.getInt("student_id");
-                int bookId = rs.getInt("book_id");
-
-                String borrowDate = rs.getString("borrow_date");
-
-                String returnDate = rs.getString("return_date");
-
-                boolean status = rs.getBoolean("status");
-
-                Borrow b = new Borrow(
-                        borrowId,
-                        studentId,
-                        bookId,
-                        borrowDate,
-                        returnDate,
-                        status
-                 );
-
-                borrows.add(b);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return borrows;
-        }
-    
-    
-    public List<Borrow> searchByIds(int studentId, int bookId) {
-
-    List<Borrow> borrows = new ArrayList<>();
-
-    String sql = "SELECT * FROM borrow WHERE book_id = ? AND student_id = ?";
-    try{
-    Connection conn = DBConnection.getInstance().getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql);
-
-        // set parameters
-        ps.setInt(1, bookId);
-        ps.setInt(2, studentId);
-
-        ResultSet rs = ps.executeQuery();
-
-        while (rs.next()) {
-
-            int borrowId = rs.getInt("borrow_id");
-
-            String borrowDate = rs.getString("borrow_date");
-
-            String returnDate = rs.getString("return_date");
-
-            boolean status = rs.getBoolean("status");
-
-            Borrow b = new Borrow(
-                    borrowId,
-                    studentId,
-                    bookId,
-                    borrowDate,
-                    returnDate,
-                    status
-            );
-
-            borrows.add(b);
-        }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-
-    return borrows;
-}
-
 }

@@ -4,6 +4,7 @@
  */
 package controllers;
 
+
 import dao.BookDAO;
 import dao.BorrowDAO;
 import dao.StudentDAO;
@@ -56,34 +57,9 @@ public class BorrowController implements Initializable {
     private TableColumn<Borrow, String> returnDateTC;
     @FXML
     private TableColumn<Borrow, Boolean> statusTC;
-    BookDAO bookDAO =new BookDAO();
-    StudentDAO studentDAO = new StudentDAO();
-    BorrowDAO borrowDAO = new BorrowDAO();
-
-    private void showInfoAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private void showWarningAlert(String title, String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private boolean showConfirmationAlert(String title, String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        Optional<ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == ButtonType.OK;
-    }
+    BookDAO bookdao = new BookDAO();
+    StudentDAO studentdao = new StudentDAO();
+    BorrowDAO borrowdao=new BorrowDAO();
     /**
      * Initializes the controller class.
      */
@@ -96,98 +72,97 @@ public class BorrowController implements Initializable {
         borrowDateTC.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
         returnDateTC.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
         statusTC.setCellValueFactory(new PropertyValueFactory<>("status"));
-        List<Integer> booksIds  = bookDAO.findAllBooksId();
-        List<Integer> studentIds  = studentDAO.findAllStudentsIds();
-        booksIds.stream().
-                forEach(id->booksCombobox.getItems().add(id));
-        studentIds.stream()
-                .forEach(id->studentsCombobox.getItems().add(id));
         
         
+        List<Integer> ids = bookdao.getAllbooksids();
+        booksCombobox.getItems().addAll(ids);
         
-        
-        
+        List<Integer> student_ids = studentdao.getAllStudentsids();
+        studentsCombobox.getItems().addAll(student_ids);
         
         table.getSelectionModel().selectedItemProperty().addListener(
-    (observable, oldValue, newValue) -> {
-         if (newValue == null) {
-            return;
-        }
-        booksCombobox.setValue(newValue.getBookId());
-        studentsCombobox.setValue(newValue.getStudentId());
-        borrowDate.setValue(LocalDate.parse(newValue.getBorrowDate()));
-        String rd = newValue.getReturnDate();
-        if(rd!=null)
-            returnDate.setValue(LocalDate.parse(rd));
-        else
-            returnDate.setValue(null);
-        status.setSelected(newValue.getStatus()); 
+                (observable,oldValue,newValue)->{
+                    if(newValue == null)  return;
+                    booksCombobox.setValue(newValue.getBookId());
+                    studentsCombobox.setValue(newValue.getStudentId());
+                    borrowDate.setValue(LocalDate.parse(newValue.getBorrowDate()));
+                    String rd = newValue.getReturnDate();
+                    if(rd != null){
+                        returnDate.setValue(LocalDate.parse(rd));
+                    }else{
+                        returnDate.setValue(null);
+                    }
+                    status.setSelected(newValue.getStatus());
+                    
+                    
+                    
+                    
+                }
         
-    }
-);
+        );
+        
+        
+        
         
     }    
 
     @FXML
     private void viewHandle(ActionEvent event) {
-        // Replace current rows with fresh DB results on each click.
-        table.getItems().setAll(borrowDAO.findAll());
+        List<Borrow> borrows = borrowdao.findAll();
+        table.getItems().setAll(borrows);
     }
 
     @FXML
     private void borrowHandle(ActionEvent event) {
-        if(borrowValidator()){
-            Integer bookId = booksCombobox.getSelectionModel().getSelectedItem();
-            Integer StudentId = studentsCombobox.getSelectionModel().getSelectedItem();
+        if(borrowValidor()){
+            Integer book_id = booksCombobox.getSelectionModel().getSelectedItem();
+            Integer student_id = studentsCombobox.getSelectionModel().getSelectedItem();
             String bd = borrowDate.getValue().toString();
-            Borrow borrow = new Borrow(StudentId, bookId, bd);
-            boolean success = borrowDAO.insertOne(borrow);
+            Borrow b=new Borrow(student_id, book_id, bd);
+            boolean success = borrowdao.insertOne(b);
             if(success){
-                viewHandle(event);
                 clear();
-                showInfoAlert("Success", "Book borrowed successfully!");
+                viewHandle(event);
+                showInfoAlert("success","BorrowAdded Successfully");
             }
-        
         }else{
+            
             showWarningAlert(
-                    "Invalid Input",
+                    "Invalid input",
                     "Missing Data",
-                    "Please select both student and book and borrow date!"
+                    "Please select book id , student id and borrow date"
             );
+            
+            
         }
+        
+        
+        
     }
 
     @FXML
-    private void returnHandle(ActionEvent event) {
-        
+    private void returnHandle(ActionEvent event) {   
         Borrow b = table.getSelectionModel().getSelectedItem();
-        if(b != null){
-            if(returnDate.getValue() == null || !status.isSelected()){
-               showWarningAlert(
-                    "Invalid Input",
-                    "Missing Data",
-                    "Please select both return date and status!"
-            );
-               return;
-            }
-            b.setReturnDate(returnDate.getValue().toString());
-            b.setStatus(status.isSelected());
-            boolean success = borrowDAO.updateOne(b);
-            clear();
-            if(success){
-                viewHandle(event);
-                clear();
-                showInfoAlert("Success", "Book returned successfully!");
-            }
-            
-            
+        if(b == null){
+            showWarningAlert("No Selection", "No Record Selected",
+                    "please select a borrow record from the table");
         }else{
-            showWarningAlert(
-                    "No Selection",
-                    "No Record Selected",
-                    "Please select a borrow record from the table."
-            );
+            if(returnDate.getValue() == null || !status.isSelected()){
+                showWarningAlert("invalid Input", "Missing data", 
+                        "please select both return date and status");
+            }else{
+                b.setReturnDate(returnDate.getValue().toString());
+                b.setStatus(status.isSelected());
+                boolean success = borrowdao.updateOne(b);
+                if(success){
+                    showInfoAlert("success", "book returned successfully");
+                    clear();
+                    viewHandle(event);
+                }
+            }
         }
+        
+        
         
         
         
@@ -197,73 +172,79 @@ public class BorrowController implements Initializable {
     @FXML
     private void deleteHandle(ActionEvent event) {
         Borrow b = table.getSelectionModel().getSelectedItem();
-        if(b != null){
-            if (showConfirmationAlert(
-                    "Delete Confirmation",
-                    "Are you sure?",
-                    "Do you want to delete this borrow record?"
-            )) {
-                borrowDAO.deleteOne(b);
+        if(b == null){
+            showWarningAlert("No Selection", "No Record Selected",
+                    "please select a borrow record from the table");
+        }else{
+            if(showConfirmationAlert("Delete Confirmation"
+                    , "Are you sure",
+                    "Do you want to delete this borrow record")){
+                borrowdao.deleteOne(b);
                 viewHandle(event);
                 clear();
-            } else {
-                // user cancelled
-                System.out.println("Delete cancelled");
             }
-            
-        }else{
-            showWarningAlert(
-                    "No Selection",
-                    "No Record Selected",
-                    "Please select a borrow record from the table."
-            );
-        }
+         }
     }
 
     @FXML
     private void borrowedBooksHandle(ActionEvent event) {
-        List<Borrow> borrows = borrowDAO.findBorrowedBooks();
-        table.getItems().setAll(borrows);
     }
 
 
     
-    public void clear(){
-        booksCombobox.setValue(null);
-        studentsCombobox.setValue(null);
-        borrowDate.setValue(null);
-        returnDate.setValue(null);
-        status.setSelected(false);
-    }
+    
 
     @FXML
     private void searchbyIds(ActionEvent event) {
-        if(booksCombobox.getValue() == null || studentsCombobox.getValue()==null){
-            showWarningAlert(
-                    "Invalid Input",
-                    "Missing Data",
-                    "Please select both student and book ids!"
-            );
-            return;
-        }
-        Integer stdId = studentsCombobox.getValue();
-        Integer bookId = booksCombobox.getValue();
-        List<Borrow> borrows = borrowDAO.searchByIds(stdId,bookId);
-        if(borrows.isEmpty()){
-            showInfoAlert("info", "this student did not borrow this book!");
-        }else{
-            table.getItems().setAll(borrows);
-        }
     }
     
-    private boolean borrowValidator(){
-        if(booksCombobox.getValue() == null || studentsCombobox.getValue() == null
-                ||borrowDate.getValue() == null){
-            return false;
-        }
-        return true;
+    
+    private void showWarningAlert(String title,String header,String message){
+        
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.showAndWait();
+        
     }
-
+   private void showInfoAlert(String title,String message){
+        
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
    
-    
+   private boolean borrowValidor(){
+       if(booksCombobox.getValue() == null || studentsCombobox.getValue() == null
+               || borrowDate.getValue() == null)
+           return false;
+       return true;
+       
+   }
+   
+   private void clear(){
+       booksCombobox.setValue(null);
+       studentsCombobox.setValue(null);
+       borrowDate.setValue(null);
+       returnDate.setValue(null);
+       status.setSelected(false);
+       
+       
+   }
+   
+   private boolean showConfirmationAlert(String title,String header,String message){
+       Alert alert =new Alert(Alert.AlertType.CONFIRMATION);
+       alert.setTitle(title);
+       alert.setHeaderText(header);
+       alert.setContentText(message);
+       Optional<ButtonType> result = alert.showAndWait();
+       if(result.isPresent() && result.get() == ButtonType.OK){
+           return true;
+       }
+       return false;
+   }
+       
 }

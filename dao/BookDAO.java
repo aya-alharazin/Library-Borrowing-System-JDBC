@@ -12,27 +12,30 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+
+
 /**
  *
  * @author aya
  */
 public class BookDAO {
-    public List<Integer> findAllBooksId(){
-        List<Integer> booksIds = new ArrayList<>();
+   
+    
+    public List<Integer> getAllbooksids(){
+        List<Integer> ids = new ArrayList<>();
         try {
             Connection conn = DBConnection.getInstance().getConnection();
+            String sql ="SELECT book_id FROM books";
             Statement stat = conn.createStatement();
-            String sql = "SELECT book_id FROM books";
             ResultSet rs = stat.executeQuery(sql);
             while(rs.next()){
-                
-                int bookId = rs.getInt(1);
-                booksIds.add(bookId);
+                Integer book_id =rs.getInt("book_id");
+                ids.add(book_id);
             }
         } catch (SQLException ex) {
             System.getLogger(BookDAO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        return booksIds;
+        return ids;
     }
     
     

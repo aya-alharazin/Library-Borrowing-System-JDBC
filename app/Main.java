@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import java.sql.Connection;
 
 
 
@@ -21,6 +22,7 @@ import javafx.stage.Stage;
  */
 public class Main extends Application{
     public static void main(String[] args) {
+        
         launch(args);
     }
 
@@ -34,13 +36,16 @@ public class Main extends Application{
         stage.setTitle("Library Management System");
         stage.show();
     }
-
+    
+    
     @Override
     public void stop()  {
         try {
-            DBConnection.getInstance().close();
+            DBConnection.getInstance().closeConnection();
         } catch (SQLException ex) {
             System.getLogger(Main.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
+
+    
 }
