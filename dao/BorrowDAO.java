@@ -6,7 +6,6 @@ package dao;
 
 import config.DBConnection;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -74,7 +73,7 @@ public class BorrowDAO {
         Connection conn = DBConnection.getInstance().getConnection();
         PreparedStatement ps = conn.prepareStatement(sql);
 
-        ps.setDate(1, Date.valueOf(borrow.getReturnDate()));
+        ps.setString(1, borrow.getReturnDate());
         
         ps.setBoolean(2, borrow.getStatus());
 

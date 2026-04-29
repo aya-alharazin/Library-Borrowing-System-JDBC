@@ -240,7 +240,7 @@ public class BorrowController implements Initializable {
             showWarningAlert(
                     "Invalid Input",
                     "Missing Data",
-                    "Please select both student and book and borrow date!"
+                    "Please select both student and book ids!"
             );
             return;
         }
@@ -250,7 +250,7 @@ public class BorrowController implements Initializable {
         table.getItems().setAll(borrows);
     }
     
-    public boolean borrowValidator(){
+    private boolean borrowValidator(){
         if(booksCombobox.getValue() == null || studentsCombobox.getValue() == null
                 ||borrowDate.getValue() == null){
             return false;
