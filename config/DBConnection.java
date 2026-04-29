@@ -25,16 +25,13 @@ public class DBConnection {
         return instance;
     }
     
-    public synchronized Connection getConnection() {
-        try {
+    public synchronized Connection getConnection() throws SQLException {
+        
             if (conn == null || conn.isClosed()) {
                 conn = DriverManager.getConnection(URL, USER, PASSWORD);
             }
             return conn;
-        } catch (SQLException ex) {
-            System.getLogger(DBConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            throw new IllegalStateException("Unable to connect to database", ex);
-        }
+        } 
     }
 
     /**
