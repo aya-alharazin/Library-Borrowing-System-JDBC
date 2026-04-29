@@ -15,15 +15,13 @@ public class Book {
     
     public Book() {}
 
-    public Book(String title,String genre,
-            int totalCopies, int availableCopies) {
-        this.title           = title;
+    public Book(String title ) {
+        this.title= title;
     }
 
-    public Book(int bookId, String title,
-                String genre, int totalCopies, int availableCopies) {
-        this.bookId          = bookId;
-        this.title           = title;
+    public Book(int bookId, String title) {
+        this.bookId= bookId;
+        this.title= title;
     }
 
 
@@ -37,10 +35,8 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" +
-               "bookId="           + bookId          +
-               ", title='"         + title           + '\'' +
-               "}\n";
+        return "bookId="    + bookId+
+               ", title="   + title+"\n";
     }
     
 }
