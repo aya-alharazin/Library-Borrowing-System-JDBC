@@ -188,7 +188,7 @@
 
 /* Editor text for editable combo boxes */
 .combo-box-base .text-input {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-prompt-text-fill: #94a3b8;
 }
 
@@ -198,13 +198,13 @@
 }
 
 .combo-box-popup .list-view .list-cell {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-background-color: #0f172a;
 }
 
 .combo-box-popup .list-view .list-cell:selected,
 .combo-box-popup .list-view .list-cell:focused {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-background-color: #3b82f6;
 }
 

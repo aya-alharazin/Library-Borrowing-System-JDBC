@@ -173,6 +173,7 @@ public class BorrowController implements Initializable {
             b.setReturnDate(returnDate.getValue().toString());
             b.setStatus(status.isSelected());
             boolean success = borrowDAO.updateOne(b);
+            clear();
             if(success){
                 viewHandle(event);
                 clear();
@@ -204,6 +205,7 @@ public class BorrowController implements Initializable {
             )) {
                 borrowDAO.deleteOne(b);
                 viewHandle(event);
+                clear();
             } else {
                 // user cancelled
                 System.out.println("Delete cancelled");
