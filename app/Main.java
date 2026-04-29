@@ -4,13 +4,11 @@
  */
 package app;
 
-import dao.BookDAO;
-import dao.StudentDAO;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 
@@ -33,6 +31,5 @@ public class Main extends Application{
         stage.setScene(s);
         stage.setTitle("Library Management System");
         stage.show();
-        stage.setAlwaysOnTop(true);
     }
 }

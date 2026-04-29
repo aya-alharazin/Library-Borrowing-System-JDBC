@@ -14,11 +14,11 @@ public class Borrow {
     private int     borrowId;
     private int     studentId;
     private int     bookId;
-    private String  borrowDate;    // or LocalDate
-    private String  returnDate;    // null until returned
+    private String  borrowDate;   
+    private String  returnDate;   
     private boolean  status;
 
-    // ─── Constructors ───────────────────────────────────────────
+    
 
     public Borrow() {}
 
@@ -39,7 +39,7 @@ public class Borrow {
         this.status     = status;
     }
 
-    // ─── Getters & Setters ──────────────────────────────────────
+   
 
     public int getBorrowId()                      { return borrowId; }
     public void setBorrowId(int borrowId)         { this.borrowId = borrowId; }
@@ -59,17 +59,17 @@ public class Borrow {
     public boolean getStatus()                     { return status; }
     public void setStatus(boolean status)          { this.status = status; }
 
-    // ─── toString ───────────────────────────────────────────────
+   
 
     @Override
     public String toString() {
-        return "Borrow{" +
+        return
                "borrowId="    + borrowId   +
                ", studentId=" + studentId  +
                ", bookId="    + bookId     +
-               ", borrowDate='"+ borrowDate + '\'' +
-               ", returnDate='"+ returnDate + '\'' +
-               ", status="    + status     +
-               '}';
+               ", borrowDate="+ borrowDate +
+               ", returnDate="+ returnDate + 
+               ", status="    + status +"\n";
+             
 }
 }
