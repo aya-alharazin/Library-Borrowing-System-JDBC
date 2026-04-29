@@ -59,6 +59,31 @@ public class BorrowController implements Initializable {
     BookDAO bookDAO =new BookDAO();
     StudentDAO studentDAO = new StudentDAO();
     BorrowDAO borrowDAO = new BorrowDAO();
+
+    private void showInfoAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showWarningAlert(String title, String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private boolean showConfirmationAlert(String title, String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
+    }
     /**
      * Initializes the controller class.
      */
@@ -119,19 +144,13 @@ public class BorrowController implements Initializable {
         borrowDAO.insertOne(borrow);
         viewHandle(event);
         clear();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
-        alert.setHeaderText(null);
-        alert.setContentText("Book borrowed successfully!");
-
-        alert.showAndWait();
+        showInfoAlert("Success", "Book borrowed successfully!");
         }else{
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Invalid Input");
-            alert.setHeaderText("Missing Data");
-            alert.setContentText("Please select both student and book and borrow date!");
-
-            alert.showAndWait();
+            showWarningAlert(
+                    "Invalid Input",
+                    "Missing Data",
+                    "Please select both student and book and borrow date!"
+            );
         }
     }
 
@@ -145,12 +164,11 @@ public class BorrowController implements Initializable {
             borrowDAO.updateOne(b);
             viewHandle(event);
         }else{
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("No Selection");
-        alert.setHeaderText("No Record Selected");
-        alert.setContentText("Please select a borrow record from the table.");
-
-        alert.showAndWait();
+            showWarningAlert(
+                    "No Selection",
+                    "No Record Selected",
+                    "Please select a borrow record from the table."
+            );
         }
         
         
@@ -162,13 +180,11 @@ public class BorrowController implements Initializable {
     private void deleteHandle(ActionEvent event) {
         Borrow b = table.getSelectionModel().getSelectedItem();
         if(b != null){
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete Confirmation");
-            alert.setHeaderText("Are you sure?");
-            alert.setContentText("Do you want to delete this borrow record?");
-            Optional<ButtonType> result = alert.showAndWait();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
+            if (showConfirmationAlert(
+                    "Delete Confirmation",
+                    "Are you sure?",
+                    "Do you want to delete this borrow record?"
+            )) {
                 borrowDAO.deleteOne(b);
                 viewHandle(event);
             } else {
@@ -177,12 +193,11 @@ public class BorrowController implements Initializable {
             }
             
         }else{
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("No Selection");
-        alert.setHeaderText("No Record Selected");
-        alert.setContentText("Please select a borrow record from the table.");
-
-        alert.showAndWait();
+            showWarningAlert(
+                    "No Selection",
+                    "No Record Selected",
+                    "Please select a borrow record from the table."
+            );
         }
     }
 
@@ -205,12 +220,11 @@ public class BorrowController implements Initializable {
     @FXML
     private void searchbyIds(ActionEvent event) {
         if(booksCombobox.getValue() == null || studentsCombobox.getValue()==null){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Invalid Input");
-            alert.setHeaderText("Missing Data");
-            alert.setContentText("Please select both student and book and borrow date!");
-
-            alert.showAndWait();
+            showWarningAlert(
+                    "Invalid Input",
+                    "Missing Data",
+                    "Please select both student and book and borrow date!"
+            );
             return;
         }
         Integer stdId = studentsCombobox.getValue();
