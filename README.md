@@ -1,5 +1,6 @@
-# 📚 Library Management System
-> A JavaFX + JDBC desktop application for managing library book borrowing operations
+# Library Management System
+
+> A JavaFX + JDBC desktop application for managing book borrowing records with a dark-themed UI.
 
 ![Java](https://img.shields.io/badge/Java-17%2B-orange?style=flat-square&logo=java)
 ![JavaFX](https://img.shields.io/badge/JavaFX-21-blue?style=flat-square)
@@ -9,222 +10,484 @@
 
 ---
 
-## 📖 Description
+## Table of Contents
 
-The **Library Management System** is a desktop application built with **JavaFX** and **JDBC** that demonstrates real-world database interaction through a clean, modern dark-themed UI. It manages the core library workflow — students borrowing and returning books — using a proper **Many-to-Many** relational database design.
-
-This project was designed as a **teaching tool** for JDBC concepts, covering everything from basic CRUD operations to transactions, JOIN queries, and the DAO design pattern.
+- [Overview](#overview)
+- [What This Project Does](#what-this-project-does)
+- [Interactive Architecture Walkthrough](#interactive-architecture-walkthrough)
+- [System Diagram](#system-diagram)
+- [Sequence Flow](#sequence-flow)
+- [Project Structure](#project-structure)
+- [Database Design](#database-design)
+- [JDBC Concepts Used](#jdbc-concepts-used)
+- [How the Classes Talk to Each Other](#how-the-classes-talk-to-each-other)
+- [Getting Started](#getting-started)
+- [How to Run](#how-to-run)
+- [Current UI Features](#current-ui-features)
+- [Notes About the Current Implementation](#notes-about-the-current-implementation)
+- [Future Improvements](#future-improvements)
+- [License](#license)
 
 ---
 
-## ✨ Features
+## Overview
 
-- 📖 **Borrow a Book** — creates a borrow record and decreases available copies (uses DB Transaction)
-- 🔄 **Return a Book** — marks borrow as returned and restores available copies (uses DB Transaction)
-- 🗑️ **Delete a Borrow** — removes a borrow record from the database
-- 👁️ **View Record** — fetch a specific borrow by Book ID and Student ID
-- 📋 **All Borrowed Books** — JOIN query showing all currently borrowed books with student info
-- 🎓 **All Students Borrowing** — shows all students with active borrows
-- 🔍 **Search by Genre** — filter borrow records by book genre
-- 🔎 **Search by IDs** — find borrow records using Book ID + Student ID
+This project is a small desktop **Library Management System** built using:
+
+- **JavaFX** for the graphical user interface
+- **FXML** for UI structure
+- **CSS** for styling
+- **JDBC** for database access
+- **MySQL** as the database
+
+The main goal of the project is to demonstrate how a desktop Java application can connect to a relational database and perform CRUD operations using the **DAO pattern**.
 
 ---
 
-## 🗂️ Project Structure
+## What This Project Does
 
+The application allows the user to manage borrowing records in a library system.
+
+The user can:
+
+- select a **book**
+- select a **student**
+- choose a **borrow date**
+- choose a **return date**
+- mark a book as returned
+- insert a new borrow record
+- update an existing borrow record
+- delete a borrow record
+- view all borrow records
+- filter borrowed books
+- search by book ID and student ID
+
+---
+
+## Interactive Architecture Walkthrough
+
+This application follows a simple layered structure:
+
+1. **UI Layer**
+   - `Borrow.fxml`
+   - `BorrowFormStyle.css`
+   - `BorrowController.java`
+
+2. **Business / Coordination Layer**
+   - `BorrowController.java`
+   - This class reacts to button clicks and coordinates between the UI and DAOs.
+
+3. **Data Access Layer**
+   - `BookDAO.java`
+   - `StudentDAO.java`
+   - `BorrowDAO.java`
+
+4. **Database Connection Layer**
+   - `DBConnection.java`
+   - Manages a single shared JDBC connection using the Singleton pattern.
+
+5. **Model Layer**
+   - `Book.java`
+   - `Student.java`
+   - `Borrow.java`
+
+---
+
+## System Diagram
+
+```mermaid
+flowchart TB
+    U[User] --> UI[JavaFX UI]
+    UI --> FXML[Borrow.fxml]
+    FXML --> C[BorrowController]
+
+    C --> BDAO[BookDAO]
+    C --> SDAO[StudentDAO]
+    C --> BRDAO[BorrowDAO]
+
+    BDAO --> DBC[DBConnection Singleton]
+    SDAO --> DBC
+    BRDAO --> DBC
+
+    DBC --> DB[(MySQL Database)]
+
+    APP[Main.java] --> FXML
+    APP --> STOP[stop()]
+    STOP --> DBC
 ```
-LibraryManagementSystem/
-│
-├── src/
-│   ├── model/
-│   │   ├── Book.java            # Book entity
-│   │   ├── Student.java         # Student entity
-│   │   └── Borrow.java          # Borrow junction entity
-│   │
-│   ├── dao/
-│   │   ├── BookDAO.java         # CRUD operations for Book
-│   │   ├── StudentDAO.java      # CRUD operations for Student
-│   │   └── BorrowDAO.java       # Borrow logic + Transactions + JOINs
-│   │
-│   ├── ui/
-│   │   ├── BorrowForm.fxml      # Main borrow management UI
-│   │   ├── BorrowForm.css       # Dark theme stylesheet
-│   │   └── BorrowController.java# UI logic and event handling
-│   │
-│   ├── util/
-│   │   └── DBConnection.java    # Singleton DB connection utility
-│   │
-│   └── Main.java                # Application entry point
-│
-├── database/
-│   └── library_db.sql           # Database schema + sample data
-│
+
+---
+
+## Sequence Flow
+
+### Borrow book flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Controller as BorrowController
+    participant DAO as BorrowDAO
+    participant DBConn as DBConnection
+    participant DB as MySQL
+
+    User->>Controller: Click Borrow
+    Controller->>Controller: Read selected values from UI
+    Controller->>Controller: Create Borrow object
+    Controller->>DAO: insertOne(borrow)
+    DAO->>DBConn: getConnection()
+    DBConn-->>DAO: Connection
+    DAO->>DB: INSERT INTO borrow(...)
+    DB-->>DAO: success
+    DAO-->>Controller: true / false
+    Controller->>DAO: findAll()
+    DAO->>DB: SELECT * FROM borrow
+    DB-->>DAO: ResultSet
+    DAO-->>Controller: List<Borrow>
+    Controller->>User: Refresh table + show alert
+```
+
+### Return book flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Controller as BorrowController
+    participant DAO as BorrowDAO
+    participant DBConn as DBConnection
+    participant DB as MySQL
+
+    User->>Controller: Select row + Click Return
+    Controller->>Controller: Update returnDate + status
+    Controller->>DAO: updateOne(borrow)
+    DAO->>DBConn: getConnection()
+    DBConn-->>DAO: Connection
+    DAO->>DB: UPDATE borrow SET ...
+    DB-->>DAO: rows updated
+    DAO-->>Controller: true / false
+    Controller->>User: Refresh table
+```
+
+---
+
+## Project Structure
+
+```text
+src/
+├── app/
+│   └── Main.java
+├── config/
+│   └── DBConnection.java
+├── controllers/
+│   └── BorrowController.java
+├── dao/
+│   ├── BookDAO.java
+│   ├── StudentDAO.java
+│   └── BorrowDAO.java
+├── models/
+│   ├── Book.java
+│   ├── Student.java
+│   └── Borrow.java
+├── styles/
+│   └── BorrowFormStyle.css
+├── views/
+│   └── Borrow.fxml
 └── README.md
 ```
 
----
+### File responsibilities
 
-## 🗃️ Database Schema
+<details>
+<summary><strong>Main.java</strong></summary>
 
-```sql
--- Students table
-CREATE TABLE student (
-    student_id     INT PRIMARY KEY AUTO_INCREMENT,
-    name           VARCHAR(100) NOT NULL,
-    email          VARCHAR(100) UNIQUE,
-    phone          VARCHAR(15),
-    enrollment_date DATE
-);
+- Launches the JavaFX application
+- Loads `Borrow.fxml`
+- Closes the database connection in `stop()`
 
--- Books table
-CREATE TABLE book (
-    book_id          INT PRIMARY KEY AUTO_INCREMENT,
-    title            VARCHAR(200) NOT NULL,
-    author           VARCHAR(100),
-    isbn             VARCHAR(20) UNIQUE,
-    genre            VARCHAR(50),
-    total_copies     INT DEFAULT 1,
-    available_copies INT DEFAULT 1
-);
+</details>
 
--- Borrow table (M-N junction)
-CREATE TABLE borrow (
-    borrow_id   INT PRIMARY KEY AUTO_INCREMENT,
-    student_id  INT NOT NULL,
-    book_id     INT NOT NULL,
-    borrow_date DATE NOT NULL,
-    return_date DATE,
-    status      ENUM('BORROWED', 'RETURNED', 'OVERDUE') DEFAULT 'BORROWED',
-    FOREIGN KEY (student_id) REFERENCES student(student_id),
-    FOREIGN KEY (book_id)    REFERENCES book(book_id)
-);
-```
+<details>
+<summary><strong>DBConnection.java</strong></summary>
 
-### Entity Relationship
+- Loads the MySQL JDBC driver
+- Opens the connection lazily
+- Reuses one shared connection
+- Closes the connection when the application exits
 
-```
-Student ──────────< Borrow >────────── Book
-(1 student borrows many books)   (1 book borrowed by many students)
-```
+</details>
 
----
+<details>
+<summary><strong>BorrowController.java</strong></summary>
 
-## ⚙️ JDBC Concepts Covered
+- Handles UI events
+- Fills combo boxes
+- Reads selected table row data
+- Calls DAO methods
+- Shows success/warning/confirmation alerts
 
-| Concept | Where Used |
-|--------|-----------|
-| `Connection` | `DBConnection.java` — connects to MySQL |
-| `PreparedStatement` | All DAO insert/update/delete operations |
-| `ResultSet` | Reading data and populating the TableView |
-| `Transactions` | Borrow & Return operations (atomic) |
-| `JOIN Queries` | All Borrowed Books, All Students Borrowing |
-| `SQLException` | Try-catch error handling in all DAOs |
-| DAO Pattern | `BookDAO`, `StudentDAO`, `BorrowDAO` |
+</details>
+
+<details>
+<summary><strong>DAO classes</strong></summary>
+
+- `BookDAO` reads book IDs
+- `StudentDAO` reads student IDs
+- `BorrowDAO` handles borrow CRUD and filtering
+
+</details>
+
+<details>
+<summary><strong>Model classes</strong></summary>
+
+- `Book` represents a book
+- `Student` represents a student
+- `Borrow` represents a borrowing record
+
+</details>
 
 ---
 
-## 🚀 Getting Started
+## Database Design
 
-### Prerequisites
+The project uses a relational model where:
 
-- Java 17 or higher
-- JavaFX 21 SDK
-- MySQL 8.0
-- MySQL JDBC Driver (`mysql-connector-j-8.x.jar`)
-- IDE: IntelliJ IDEA or Eclipse
+- one **student** can borrow many books
+- one **book** can be borrowed by many students over time
+- the `borrow` table represents the relationship between them
 
-### 1. Clone the Repository
+### Conceptual relationship
 
-```bash
-git clone https://github.com/yourusername/library-management-system.git
-cd library-management-system
+```mermaid
+erDiagram
+    STUDENT ||--o{ BORROW : borrows
+    BOOK ||--o{ BORROW : appears_in
+
+    STUDENT {
+        int student_id
+        string name
+    }
+
+    BOOK {
+        int book_id
+        string title
+    }
+
+    BORROW {
+        int borrow_id
+        int student_id
+        int book_id
+        date borrow_date
+        date return_date
+        boolean status
+    }
 ```
 
-### 2. Set Up the Database
+### Expected columns used in code
 
-```bash
-mysql -u root -p
-source database/library_db.sql
-```
+`BorrowDAO` currently works with these fields:
 
-### 3. Configure DB Connection
+- `borrow_id`
+- `student_id`
+- `book_id`
+- `borrow_date`
+- `return_date`
+- `status`
 
-Edit `src/util/DBConnection.java`:
+`BookDAO` reads:
+
+- `book_id`
+
+`StudentDAO` reads:
+
+- `student_id`
+
+---
+
+## JDBC Concepts Used
+
+<details open>
+<summary><strong>Connection</strong></summary>
+
+`DBConnection` creates a JDBC connection using `DriverManager.getConnection(...)`.
+
+</details>
+
+<details>
+<summary><strong>PreparedStatement</strong></summary>
+
+Used in insert, update, delete, and search operations to safely pass parameters into SQL queries.
+
+</details>
+
+<details>
+<summary><strong>Statement</strong></summary>
+
+Used for simple queries like loading all IDs or reading all borrow records.
+
+</details>
+
+<details>
+<summary><strong>ResultSet</strong></summary>
+
+Returned from SQL queries and converted into Java model objects.
+
+</details>
+
+<details>
+<summary><strong>DAO Pattern</strong></summary>
+
+Each DAO class isolates database logic from UI logic. This keeps the controller cleaner and easier to maintain.
+
+</details>
+
+<details>
+<summary><strong>Singleton Pattern</strong></summary>
+
+`DBConnection` uses a singleton so the same connection manager is reused across the application.
+
+</details>
+
+---
+
+## How the Classes Talk to Each Other
+
+### Startup
+
+1. `Main.java` starts the JavaFX application.
+2. `Borrow.fxml` is loaded.
+3. JavaFX creates `BorrowController`.
+4. `initialize(...)` runs automatically.
+5. The controller asks `BookDAO` and `StudentDAO` for IDs.
+6. Those DAOs ask `DBConnection` for the database connection.
+
+### When the user clicks Borrow
+
+1. `BorrowController.borrowHandle(...)` is called.
+2. The controller reads values from the UI.
+3. A `Borrow` object is created.
+4. `BorrowDAO.insertOne(...)` inserts the row into the database.
+5. The table is refreshed with `BorrowDAO.findAll()`.
+
+### When the user clicks Return
+
+1. The selected table row becomes a `Borrow` object.
+2. The controller updates `returnDate` and `status`.
+3. `BorrowDAO.updateOne(...)` updates the row in MySQL.
+
+### When the user clicks Delete
+
+1. The controller gets the selected row.
+2. A confirmation alert is shown.
+3. `BorrowDAO.deleteOne(...)` removes the row from the database.
+
+### When the app closes
+
+1. JavaFX calls `Main.stop()`
+2. `Main.stop()` calls `DBConnection.getInstance().close()`
+3. The JDBC connection is closed safely
+
+---
+
+## Getting Started
+
+### Requirements
+
+- Java 17 or later
+- JavaFX SDK
+- MySQL Server
+- MySQL JDBC Driver
+- NetBeans, IntelliJ IDEA, or another Java IDE
+
+### 1. Configure the database connection
+
+Edit `config/DBConnection.java`:
 
 ```java
-private static final String URL      = "jdbc:mysql://localhost:3306/library_db";
-private static final String USER     = "root";
-private static final String PASSWORD = "your_password";
+private static final String URL = "jdbc:mysql://localhost:3306/library-system";
+private static final String USER = "root";
+private static final String PASSWORD = "";
 ```
 
-### 4. Add JDBC Driver
+Set these values to match your local MySQL setup.
 
-Add `mysql-connector-j-8.x.jar` to your project's classpath/libraries.
+### 2. Create the database
 
-### 5. Run the Application
+Create your MySQL database and tables so they match the table/column names used in the DAOs.
 
-Run `Main.java` from your IDE.
+### 3. Add the JDBC driver
 
----
+Add the MySQL connector JAR to the project libraries/classpath.
 
-## 🔄 Core Business Logic
+### 4. Run the project
 
-### Borrow a Book (Transaction)
-```
-1. Check available_copies > 0
-2. Check student doesn't already have this book
-3. INSERT into borrow table
-4. UPDATE book SET available_copies = available_copies - 1
-5. COMMIT — or ROLLBACK if any step fails
-```
-
-### Return a Book (Transaction)
-```
-1. Find open borrow record (status = BORROWED)
-2. UPDATE borrow SET return_date = today, status = RETURNED
-3. UPDATE book SET available_copies = available_copies + 1
-4. COMMIT — or ROLLBACK if any step fails
-```
+Run `app/Main.java`.
 
 ---
 
-## 🎨 UI Design
+## How to Run
 
-- **Framework:** JavaFX with FXML (Scene Builder compatible)
-- **Theme:** Dark Navy (`#0f172a`) with Blue accent (`#3b82f6`)
-- **Layout:** Split-pane — Form panel (left) + TableView (right)
-- **Styling:** External CSS file (`BorrowForm.css`)
+### Typical user steps
 
----
-
-## 📋 Status Indicators
-
-| Status | Meaning |
-|--------|---------|
-| 🔵 `BORROWED` | Book is currently with the student |
-| 🟢 `RETURNED` | Book has been returned |
-| 🟡 `OVERDUE` | Return date passed, not yet returned |
+1. Launch the application
+2. Click `View` to load current borrow records
+3. Choose a book and a student
+4. Select a borrow date
+5. Click `Borrow`
+6. Select a row from the table to return or delete it
+7. Use `borrowedBooks` or `search by ids` for quick filtering
 
 ---
 
-## 👨‍🏫 Educational Purpose
+## Current UI Features
 
-This project was developed as a **JDBC teaching example** covering:
-
-- Relational DB design with M-N relationships
-- Java Model classes (POJO)
-- DAO design pattern
-- JDBC CRUD operations
-- Database Transactions
-- JOIN queries with ResultSet
-- JavaFX + FXML UI integration
+- dark theme UI using JavaFX CSS
+- combo boxes for book ID and student ID
+- date pickers for borrow/return dates
+- status checkbox for returned state
+- table view for displaying borrow records
+- alert dialogs for success, warnings, and confirmation
 
 ---
 
-## 📄 License
+## Notes About the Current Implementation
 
-This project is licensed under the MIT License — feel free to use it for educational purposes.
+<details open>
+<summary><strong>Important notes</strong></summary>
+
+- The app currently uses a **single shared JDBC connection** through `DBConnection`.
+- The DB connection is closed when the JavaFX app exits.
+- DAO methods should still close `Statement`, `PreparedStatement`, and `ResultSet` properly.
+- Some README examples that describe transactions or enum status are conceptual; the current code uses a simpler implementation and stores `status` as a boolean.
+
+</details>
+
+<details>
+<summary><strong>Current controller behavior</strong></summary>
+
+- `BorrowController` initializes table columns and combo boxes
+- alerts are centralized in helper methods
+- the selected row populates the form fields
+- search and filter operations refresh the same table
+
+</details>
 
 ---
 
-> Built with ❤️ for JDBC students — Learn by building something real.
+## Future Improvements
+
+- add proper transaction handling for borrow/return operations
+- add validation for all user inputs
+- use `try-with-resources` in DAO methods
+- add book title and student name instead of showing IDs only
+- add dashboards/statistics
+- add overdue calculation
+- migrate from a singleton connection to a connection pool
+
+---
+
+## License
+
+This project is licensed under the MIT License and can be used for learning and educational purposes.
+
+---
+
+> Built as a practical JDBC + JavaFX learning project.
