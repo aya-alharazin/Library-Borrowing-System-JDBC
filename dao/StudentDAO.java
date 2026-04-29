@@ -18,9 +18,9 @@ import java.util.List;
  */
 public class StudentDAO {
     public List<Integer> findAllStudentsIds(){
-        Connection conn = DBConnection.getInstance().getConnection();
         List<Integer> studentsids = new ArrayList<>();
         try {
+            Connection conn = DBConnection.getInstance().getConnection();
             Statement stat = conn.createStatement();
             String sql = "SELECT student_id FROM students";
             ResultSet rs = stat.executeQuery(sql);

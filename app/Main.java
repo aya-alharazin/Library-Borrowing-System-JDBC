@@ -6,6 +6,7 @@ package app;
 
 
 import config.DBConnection;
+import java.sql.SQLException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,7 +36,11 @@ public class Main extends Application{
     }
 
     @Override
-    public void stop() throws Exception {
-        DBConnection.getInstance().close();
+    public void stop()  {
+        try {
+            DBConnection.getInstance().close();
+        } catch (SQLException ex) {
+            System.getLogger(Main.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 }

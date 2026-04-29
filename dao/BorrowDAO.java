@@ -21,9 +21,9 @@ import java.sql.PreparedStatement;
  */
 public class BorrowDAO {
     public List<Borrow> findAll(){
-        Connection conn = DBConnection.getInstance().getConnection();
         List<Borrow> borrows = new ArrayList<>();
         try {
+        Connection conn = DBConnection.getInstance().getConnection();
             Statement stat = conn.createStatement();
             String sql = "SELECT * FROM borrow";
             ResultSet rs = stat.executeQuery(sql);
@@ -47,8 +47,9 @@ public class BorrowDAO {
     
     
     public boolean insertOne(Borrow borrow){
-        Connection conn = DBConnection.getInstance().getConnection();
         try {
+            Connection conn = DBConnection.getInstance().getConnection();
+        
             PreparedStatement ps = conn.prepareStatement("INSERT INTO borrow(student_id,book_id,borrow_date,return_date,status)"
                     + " VALUES(?,?,?,?,?)");
             ps.setInt(1, borrow.getStudentId());

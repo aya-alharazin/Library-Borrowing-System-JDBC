@@ -18,9 +18,9 @@ import java.util.ArrayList;
  */
 public class BookDAO {
     public List<Integer> findAllBooksId(){
-        Connection conn = DBConnection.getInstance().getConnection();
         List<Integer> booksIds = new ArrayList<>();
         try {
+            Connection conn = DBConnection.getInstance().getConnection();
             Statement stat = conn.createStatement();
             String sql = "SELECT book_id FROM books";
             ResultSet rs = stat.executeQuery(sql);
