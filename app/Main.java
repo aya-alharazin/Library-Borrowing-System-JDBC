@@ -36,7 +36,6 @@ public class Main extends Application{
 
     @Override
     public void stop() throws Exception {
-        // Called automatically when the JavaFX app is closing.
         DBConnection.getInstance().close();
     }
 }
