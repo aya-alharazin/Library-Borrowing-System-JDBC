@@ -111,7 +111,7 @@ public class BorrowController implements Initializable {
 
     @FXML
     private void borrowHandle(ActionEvent event) {
-        if(isValidate()){
+        if(borrowValidator()){
         Integer bookId = booksCombobox.getSelectionModel().getSelectedItem();
         Integer StudentId = studentsCombobox.getSelectionModel().getSelectedItem();
         String bd = borrowDate.getValue().toString();
@@ -129,7 +129,7 @@ public class BorrowController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Invalid Input");
             alert.setHeaderText("Missing Data");
-            alert.setContentText("Please select both student and book!");
+            alert.setContentText("Please select both student and book and borrow date!");
 
             alert.showAndWait();
         }
@@ -144,7 +144,13 @@ public class BorrowController implements Initializable {
             b.setStatus(status.isSelected());
             borrowDAO.updateOne(b);
             viewHandle(event);
-            
+        }else{
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("No Selection");
+        alert.setHeaderText("No Record Selected");
+        alert.setContentText("Please select a borrow record from the table.");
+
+        alert.showAndWait();
         }
         
         
@@ -170,6 +176,13 @@ public class BorrowController implements Initializable {
                 System.out.println("Delete cancelled");
             }
             
+        }else{
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("No Selection");
+        alert.setHeaderText("No Record Selected");
+        alert.setContentText("Please select a borrow record from the table.");
+
+        alert.showAndWait();
         }
     }
 
@@ -191,13 +204,26 @@ public class BorrowController implements Initializable {
 
     @FXML
     private void searchbyIds(ActionEvent event) {
+        if(booksCombobox.getValue() == null || studentsCombobox.getValue()==null){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Invalid Input");
+            alert.setHeaderText("Missing Data");
+            alert.setContentText("Please select both student and book and borrow date!");
+
+            alert.showAndWait();
+            return;
+        }
         Integer stdId = studentsCombobox.getValue();
         Integer bookId = booksCombobox.getValue();
         List<Borrow> borrows = borrowDAO.searchByIds(stdId,bookId);
         table.getItems().setAll(borrows);
     }
     
-    public boolean isValidate(){
+    public boolean borrowValidator(){
+        if(booksCombobox.getValue() == null || studentsCombobox.getValue() == null
+                ||borrowDate.getValue() == null){
+            return false;
+        }
         return true;
     }
 
