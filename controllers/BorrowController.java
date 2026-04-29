@@ -219,8 +219,8 @@ public class BorrowController implements Initializable {
 
     
     public void clear(){
-        booksCombobox.getItems().clear();
-        studentsCombobox.getItems().clear();
+        booksCombobox.setValue(null);
+        studentsCombobox.setValue(null);
         borrowDate.setValue(null);
         returnDate.setValue(null);
         status.setSelected(false);
