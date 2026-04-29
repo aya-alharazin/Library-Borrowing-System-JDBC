@@ -36,5 +36,23 @@ public class DBConnection {
             throw new IllegalStateException("Unable to connect to database", ex);
         }
     }
+
+    /**
+     * Close the singleton connection when the application exits.
+     * <p>
+     * IMPORTANT: your DAOs should still close {@code Statement}/{@code ResultSet}
+     * they create (use try-with-resources).
+     */
+    public synchronized void close() {
+        if (conn != null) {
+            try {
+                if (!conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.getLogger(DBConnection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            } 
+        }
+    }
     
 }
