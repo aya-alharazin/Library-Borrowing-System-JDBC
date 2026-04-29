@@ -247,7 +247,11 @@ public class BorrowController implements Initializable {
         Integer stdId = studentsCombobox.getValue();
         Integer bookId = booksCombobox.getValue();
         List<Borrow> borrows = borrowDAO.searchByIds(stdId,bookId);
-        table.getItems().setAll(borrows);
+        if(borrows.isEmpty()){
+            showInfoAlert("info", "this student did not borrow this book!");
+        }else{
+            table.getItems().setAll(borrows);
+        }
     }
     
     private boolean borrowValidator(){
