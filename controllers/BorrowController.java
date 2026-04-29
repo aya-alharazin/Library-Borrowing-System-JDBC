@@ -137,14 +137,17 @@ public class BorrowController implements Initializable {
     @FXML
     private void borrowHandle(ActionEvent event) {
         if(borrowValidator()){
-        Integer bookId = booksCombobox.getSelectionModel().getSelectedItem();
-        Integer StudentId = studentsCombobox.getSelectionModel().getSelectedItem();
-        String bd = borrowDate.getValue().toString();
-        Borrow borrow = new Borrow(StudentId, bookId, bd);
-        borrowDAO.insertOne(borrow);
-        viewHandle(event);
-        clear();
-        showInfoAlert("Success", "Book borrowed successfully!");
+            Integer bookId = booksCombobox.getSelectionModel().getSelectedItem();
+            Integer StudentId = studentsCombobox.getSelectionModel().getSelectedItem();
+            String bd = borrowDate.getValue().toString();
+            Borrow borrow = new Borrow(StudentId, bookId, bd);
+            boolean success = borrowDAO.insertOne(borrow);
+            if(success){
+                viewHandle(event);
+                clear();
+                showInfoAlert("Success", "Book borrowed successfully!");
+            }
+        
         }else{
             showWarningAlert(
                     "Invalid Input",
@@ -169,8 +172,13 @@ public class BorrowController implements Initializable {
             }
             b.setReturnDate(returnDate.getValue().toString());
             b.setStatus(status.isSelected());
-            borrowDAO.updateOne(b);
-            viewHandle(event);
+            boolean success = borrowDAO.updateOne(b);
+            if(success){
+                viewHandle(event);
+                clear();
+                showInfoAlert("Success", "Book returned successfully!");
+            }
+            
             
         }else{
             showWarningAlert(
