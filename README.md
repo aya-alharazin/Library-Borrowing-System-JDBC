@@ -93,30 +93,6 @@ This application follows a simple layered structure:
 
 ---
 
-## System Diagram
-
-```mermaid
-flowchart TB
-    U[User] --> UI[JavaFX UI]
-    UI --> FXML[Borrow.fxml]
-    FXML --> C[BorrowController]
-
-    C --> BDAO[BookDAO]
-    C --> SDAO[StudentDAO]
-    C --> BRDAO[BorrowDAO]
-
-    BDAO --> DBC[DBConnection Singleton]
-    SDAO --> DBC
-    BRDAO --> DBC
-
-    DBC --> DB[(MySQL Database)]
-
-    APP[Main.java] --> FXML
-    APP --> STOP[stop()]
-    STOP --> DBC
-```
-
----
 
 ## Sequence Flow
 
