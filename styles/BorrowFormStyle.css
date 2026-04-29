@@ -171,3 +171,30 @@
     -fx-background-color: #334155;
     -fx-background-radius: 5;
 }
+
+/* COMBOBOX */
+.combo-box, .combo-box-base {
+    -fx-background-color: #0f172a;
+}
+
+/* Text shown in the combo box field */
+.combo-box-base .text-input {
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #94a3b8;
+}
+
+/* Dropdown list background + cells */
+.combo-box-popup .list-view {
+    -fx-background-color: #0f172a;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-text-fill: white;
+    -fx-background-color: #0f172a;
+}
+
+.combo-box-popup .list-view .list-cell:selected,
+.combo-box-popup .list-view .list-cell:focused {
+    -fx-text-fill: white;
+    -fx-background-color: #3b82f6;
+}
