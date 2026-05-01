@@ -448,17 +448,12 @@ Run `app/Main.java`.
 
 ---
 
-## Future Improvements
+## Lecture Video
 
-- add proper transaction handling for borrow/return operations
-- add validation for all user inputs
-- use `try-with-resources` in DAO methods
-- add book title and student name instead of showing IDs only
-- add dashboards/statistics
-- add overdue calculation
-- migrate from a singleton connection to a connection pool
+This project was built live during the following lecture. Watch it to follow along with the full explanation and code walkthrough.
 
----
+[![Watch the lecture](https://img.shields.io/badge/YouTube-Watch%20Lecture-red?style=for-the-badge&logo=youtube)](https://youtu.be/qvqxeeke8dg?si=mSMy2p4cIlEaU5JE)
+
 
 ## License
 
